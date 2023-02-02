@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Bitget | Home</title>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <%- include('navBar'); %>
+    <style>
+      body {
+        background-color: rgb(204, 204, 204);
+        margin: 0;
+        padding: 0;
+      }
+      table {
+        width: 50%;
+        border-collapse: collapse;
+      
+      }
+
+      thead {
+        background-color: #333;
+        color: #fff;
+      }
+
+      th,
+      td {
+        padding: 10px;
+        border: 1px solid #333;
+        text-align: center;
+        width: 10%;
+      }
+
+      th {
+        background-color: #333;
+        color: #fff;
+      }
+
+      tr:nth-child(even) {
+        background-color: #ddd;
+      }
+      .input-container {
+        display: flex;
+
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        height: 100vh;
+        margin-bottom: 100px;
+      }
+
+      .input-field {
+        padding: 10px 20px;
+        font-size: 16px;
+        margin: 20px;
+        border-radius: 5px;
+        border: 1px solid #ccc;
+      }
+
+      .submit-button {
+        padding: 10px 20px;
+        background-color: red;
+        color: #fff;
+        border-radius: 5px;
+        border: none;
+        cursor: pointer;
+        margin-bottom: 30px;
+
+        margin-top: 20px;
+      }
+      .inputs {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        margin-top: 2rem;
+      }
+      .input-1 {
+        /* display: flex; */
+        justify-content: center;
+        align-items: center;
+      }
+      .order-table {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+      }
+      .buttons {
+        display: flex;
+        flex-direction: row;
+        width: 300px;
+        align-items: center;
+        justify-content: space-between;
+      }
+      .order-history-table {
+      }
+      .table-c {
+        display: flex;
+        justify-content: center;
+        flex-direction: column;
+        text-align: center;
+        margin-top: 1rem;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Input Container Starts here -->
+    <div class="inputs">
+      <div class="input-1">
+        <h2>Enter Credentials For User 1</h2>
+        <input
+          type="text"
+          id="apiKey"
+          class="input-field"
+          placeholder="Enter ApiKey"
+        />
+        <input
+          type="text"
+          id="secretKey"
+          class="input-field"
+          placeholder="Enter SecretKey"
+        />
+        <input
+          type="text"
+          id="paraPhrase"
+          class="input-field"
+          placeholder="Enter ParaPhrase"
+        />
+      <label for="type">Choose Symbol Type</label>
+<select name="type" id="proType"  class="input-field">
+  <option value="USDT">USDT</option>
+  <option value="BRL">BRL</option>
+  <option value="EUR">EUR</option>
+  <option value="ETH">ETH</option>
+  <option value="BTC">BTC</option>
+  <option value="USDC">USDC</option>
+</select>
+      </div>
+      <button type="button" class="submit-button" onclick="test()">
+       getData 
+      </button>
+    </div>
+    <div class="order-table">
+      <h2 class="text-align: center;">Order Details For User 1</h2>
+      <table id="dataTable">
+        <thead>
+          <tr>
+            <th>Symbol</th>
+            <th>SymbolName</th>
+            <th>Base Coin</th>
+            <th>Product Type</th>
+            <th>Min Trade Amount</th>
+            <th>Max Trade Amount</th>
+            <th>Taker Fee Rate</th>
+            <th>Maker Fee Rate</th>
+            <th>Price Scale</th>
+            <th>Quantity Scale</th>
+            <th>Status</th>
+            <th>MinTradeUSDT</th>
+          </tr>
+        </thead>
+        <tbody id="dataBodyU1"></tbody>
+      </table>
+    </div>
+    <br />
+    <script>
+      let firstOrder = {};
+      let secondOrder={};
+     function test  () {
+        const apiKey = document.getElementById("apiKey").value;
+        const secretKey = document.getElementById("secretKey").value;
+        const paraPhrase = document.getElementById("paraPhrase").value;
+        const proType= document.getElementById("proType").value;
+          axios({
+            method: "get",
+            url: "https://sumbol-tracker-app.vercel.app/v1/api/symbols",
+            headers: {
+              "Access-Control-Allow-Methods":
+                "GET,PUT,POST,DELETE,PATCH,OPTIONS",
+              "Access-Control-Allow-Origin": "*",
+              "Content-Type": "application/json",
+            },
+            params: {
+              apiKey: apiKey,
+              secretKey: secretKey,
+              paraPhrase: paraPhrase,
+            },
+          })
+            .then(function (response) {
+              var dataBody = document.getElementById("dataBodyU1");
+               const  items=response.data.data;
+              const result = items.filter(function(item) {
+            return item.quoteCoin = proType;
+            });
+            // console.log(result);
+            result.forEach(function (item) {
+                var row = document.createElement("tr");
+                for (var key in item) {
+                  var cell = document.createElement("td");
+                  cell.innerHTML = item[key];
+                  row.appendChild(cell);
+                }
+                dataBody.appendChild(row);
+              });
+            })
+            .catch(function (error) {
+            console.log(error);
+            });
+      };
+      console.log(firstOrder.orderId);
+      // User 2
+      // submitButton1.addEventListener("click", function () {
+      //   const apiKey1 = document.getElementById("apiKey1").value;
+      //   const secretKey1 = document.getElementById("secretKey1").value;
+      //   const paraPhrase1 = document.getElementById("paraPhrase1").value;
+      //   if (apiKey1.length < 10 || secretKey1 < 10 || paraPhrase1.length < 5) {
+      //     alert("Please Enter the Credentials in Input Fields");
+      //   } else {
+      //     axios({
+      //       method: "get",
+      //       url: "https://cheerful-bikini-ox.cyclic.app/v1/api/u2/order",
+      //       headers: {
+      //         "Access-Control-Allow-Methods":
+      //           "GET,PUT,POST,DELETE,PATCH,OPTIONS",
+      //         "Access-Control-Allow-Origin": "*",
+      //         "Content-Type": "application/json",
+      //       },
+      //       params: {
+      //         apiKey: apiKey1,
+      //         secretKey: secretKey1,
+      //         paraPhrase: paraPhrase1,
+      //         symbol: "TRXUSDT_SPBL",
+      //         orderId: 974792555020390400,
+      //         clientOrderId: 974792554995224576,
+      //       },
+      //     })
+      //       .then(function (response) {
+      //         var dataBody = document.getElementById("dataBodyU2");
+
+      //         response.data.data.forEach(function (item) {
+      //           secondOrder=item
+      //           var row = document.createElement("tr");
+
+      //           for (var key in item) {
+      //             var cell = document.createElement("td");
+      //             cell.innerHTML = item[key];
+      //             row.appendChild(cell);
+      //           }
+
+      //           dataBody.appendChild(row);
+      //         });
+      //       })
+      //       .catch(function (error) {
+      //         alert("Credentials not Correct User:2");
+      //       });
+      //   }
+      // });
+      function getDATA() {
+        fillPrice = firstOrder.fillPrice + "/" + secondOrder.fillPrice;
+        fillQuantity =
+        firstOrder.fillQuantity + "/" + secondOrder.fillQuantity;
+        fillTotalAmount =
+        firstOrder.fillTotalAmount + "/" + secondOrder.fillTotalAmount;
+        fees = firstOrder.fees + "/" + secondOrder.fees;
+       if ( secondOrder.fillPrice==undefined || firstOrder.fillPrice==undefined) {
+        alert("Please put the credentials for Both User")
+        return -1;
+       } else {
+        document
+          .getElementById("showData")
+          .addEventListener("click", function () {
+            document.getElementById("fill").innerHTML = fillPrice;
+            document.getElementById("quantity").innerHTML = fillQuantity;
+            document.getElementById("total").innerHTML = fillTotalAmount;
+            document.getElementById("fee").innerHTML = fees;
+          });
+       }
+       }
+    </script>
+  </body>
+</html>
