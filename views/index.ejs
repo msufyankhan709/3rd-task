@@ -191,7 +191,7 @@
               var dataBody = document.getElementById("dataBodyU1");
                const  items=response.data.data;
               const result = items.filter(function(item) {
-            return item.quoteCoin = proType;
+            return item.quoteCoin == proType;
             });
             // console.log(result);
             result.forEach(function (item) {
